@@ -1,0 +1,477 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <title>E-Summit'25 Countdown</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1"></script>
+    <!-- <base href="/esummit-countdown/" /> -->
+    <style>
+      @keyframes flip-top {
+        to {
+          transform: rotateX(90deg);
+        }
+      }
+      @keyframes flip-bottom {
+        to {
+          transform: rotateX(0deg);
+        }
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 14px;
+        font-family: "Red Hat Text", sans-serif;
+      }
+      body {
+        font-weight: 700;
+        height: 100%;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: url(https://raw.githubusercontent.com/alleycaaat/frontend-mentor/main/countdown-timer/images/bg-stars.svg),
+          linear-gradient(0deg, #241447 33%, rgba(30, 30, 40, 1) 50%);
+      }
+      h1 {
+        text-transform: uppercase;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 50px;
+        letter-spacing: 5px;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+      }
+      main .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
+        opacity: 0.8;
+        z-index: -7899;
+      }
+      main .logo img {
+        width: 100%;
+        height: auto;
+      }
+      main .cards {
+        display: flex;
+        gap: 15px;
+        z-index: 9999;
+      }
+      main .cards .card {
+        text-align: center;
+        font-size: 25px;
+      }
+      main .cards .card p {
+        color: #8486a9;
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+      main .cards .card .flip-card {
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 7px 3px 0 #151515;
+        position: relative;
+        margin: 15px auto;
+      }
+      main .cards .card .top-half,
+      main .cards .card .bottom-half,
+      main .cards .card .top-flip,
+      main .cards .card .bottom-flip {
+        color: rgba(237, 208, 106, 1);
+        font-size: 35px;
+        height: 43px;
+        width: 90px;
+        padding: 23px 7px;
+        overflow: hidden;
+        text-align: center;
+        will-change: transform !important;
+        box-shadow: 0 3px rgba(71, 83, 115, 0.2) inset;
+      }
+      main .cards .card .top-half,
+      main .cards .card .top-flip {
+        color: rgba(194, 146, 37, 1);
+        border-radius: 5px 5px 0 0;
+        background-color: #2c2c44;
+      }
+      main .cards .card .top-half::before,
+      main .cards .card .top-flip::before {
+        content: "";
+        background-color: #191a24;
+        height: 10px;
+        width: 10px;
+        border-radius: 100%;
+        position: absolute;
+        bottom: -5px;
+        left: -5px;
+      }
+      main .cards .card .top-half::after,
+      main .cards .card .top-flip::after {
+        content: "";
+        background-color: #191a24;
+        height: 10px;
+        width: 10px;
+        border-radius: 100%;
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+      }
+      main .cards .card .bottom-half,
+      main .cards .card .bottom-flip {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        border-radius: 0 0 5px 5px;
+        background-color: #343650;
+        box-shadow: 0 -2px 5px 0 rgba(71, 83, 115, 0.7) inset;
+      }
+      main .cards .card .bottom-half::before,
+      main .cards .card .bottom-flip::before {
+        content: "";
+        background-color: #191a24;
+        height: 10px;
+        width: 10px;
+        border-radius: 100%;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+      }
+      main .cards .card .bottom-half::after,
+      main .cards .card .bottom-flip::after {
+        content: "";
+        background-color: #191a24;
+        height: 10px;
+        width: 10px;
+        border-radius: 100%;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+      }
+      main .cards .card .top-flip {
+        position: absolute;
+        transform-origin: bottom;
+        transform: rotateX(0deg);
+        animation: flip-top 0.5s ease-in forwards;
+      }
+      main .cards .card .bottom-flip {
+        position: absolute;
+        bottom: 0;
+        transform-origin: top;
+        transform: rotateX(90deg);
+        animation: flip-bottom 0.5s ease-out 0.5s;
+      }
+      footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-image: url(./footer.svg);
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        min-height: 20%;
+        width: 100%;
+        bottom: 0;
+      }
+      footer .media {
+        margin-top: 60px;
+        margin-bottom: 15px;
+      }
+      footer .media a {
+        text-decoration: none;
+        margin: 5px 15px;
+      }
+      footer .media a :hover {
+        filter: invert(58%) sepia(38%) saturate(4955%) hue-rotate(310deg)
+          brightness(101%) contrast(102%);
+      }
+      footer .femc {
+        margin-bottom: 10px;
+        color: #8486a9;
+      }
+      footer .femc a {
+        text-decoration: none;
+        color: rgba(194, 146, 37, 1);
+      }
+      footer .femc a:hover {
+        text-transform: lowercase;
+      }
+      @media screen and (max-width: 450px) {
+        main .logo {
+          width: 80vw;
+          height: auto;
+        }
+      }
+      @media screen and (min-width: 700px) {
+        main h1 {
+          font-size: 31px;
+        }
+        main .cards {
+          gap: 25px;
+        }
+        main .cards .top-half,
+        main .cards .bottom-half,
+        main .cards .top-flip,
+        main .cards .bottom-flip {
+          font-size: 70px !important;
+          height: 80px !important;
+          width: 180px !important;
+          padding: 34px 7px !important;
+        }
+      }
+      video {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        object-fit: cover;
+        z-index: 999989;
+        opacity: 0;
+
+        /* filter: blur(5px); */
+        /* width: 640px; */
+        /* height: 360px; */
+        /* opacity: 0; Start fully transparent */
+        transition: opacity 2s ease-in;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header></header>
+    <div class="newvideo">
+      <video id="myVideo">
+        <source src="./Final_design.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <main>
+      <div class="logo">
+        <!-- <img src="./Gg2hQOYbAAA6p4z.jpg" alt="" /> -->
+        <img src="sorrymarki.png" alt="image" />
+      </div>
+      <h1>The Pursuit begins in</h1>
+      <div class="cards">
+        <!-- <div class='card days'>
+				<div class='flip-card'>
+					<div class='top-half'>00</div>
+					<div class='bottom-half'>00</div>
+				</div>
+				<p>Days</p>
+			</div> -->
+
+        <div class="card hours">
+          <div class="flip-card">
+            <div class="top-half">00</div>
+            <div class="bottom-half">00</div>
+          </div>
+          <p>Hours</p>
+        </div>
+
+        <div class="card minutes">
+          <div class="flip-card">
+            <div class="top-half">00</div>
+            <div class="bottom-half">00</div>
+          </div>
+          <p>Minutes</p>
+        </div>
+
+        <div class="card seconds">
+          <div class="flip-card">
+            <div class="top-half">00</div>
+            <div class="bottom-half">00</div>
+          </div>
+          <p>Seconds</p>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="media">
+        <a href="https://www.instagram.com/iitbombay_ecell/">
+          <img
+            src="https://raw.githubusercontent.com/alleycaaat/frontend-mentor/main/countdown-timer/images/icon-instagram.svg"
+            alt="instagram icon"
+          />
+        </a>
+      </div>
+      <div class="femc">
+        Coded with ❤️ by
+        <a href="https://www.ecell.in/esummit/" target="_blank"
+          >Web Team | E-Cell IIT Bombay</a
+        >
+      </div>
+    </footer>
+    <script>
+      const countdown = new Date("2025-02-01T00:00:00+05:30");
+
+      // const days = document.querySelector(".days").querySelector(".flip-card");
+      const hours = document
+        .querySelector(".hours")
+        .querySelector(".flip-card");
+      const minutes = document
+        .querySelector(".minutes")
+        .querySelector(".flip-card");
+      const seconds = document
+        .querySelector(".seconds")
+        .querySelector(".flip-card");
+
+      // ** get the time totals, return them
+      function getTimeRemaining(countdown) {
+        const now = new Date();
+        const diff = countdown - now;
+
+        // const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        return {
+          diff,
+          // days,
+          hours,
+          minutes,
+          seconds,
+        };
+      }
+
+      function initializeClock(countdown) {
+        function updateClock() {
+          const t = getTimeRemaining(countdown);
+          // addFlip(days, t.days);
+          addFlip(hours, t.hours);
+          addFlip(minutes, t.minutes);
+          addFlip(seconds, t.seconds);
+
+          if (t.diff <= 0) {
+            clearInterval(timeinterval);
+            launchConfetti(); // Trigger confetti
+            document.querySelector("video").style.opacity = 1;
+            document.getElementById("myVideo").play();
+          }
+        }
+        function getAngle(x, y) {
+          const centerX = window.innerWidth / 2; // X-coordinate of the screen center
+          const centerY = window.innerHeight / 2; // Y-coordinate of the screen center
+          return (Math.atan2(centerY - y, centerX - x) * 180) / Math.PI; // Convert radians to degrees
+        }
+
+        // Calculate angles for the four corners
+        const topLeftAngle = getAngle(0, 0); // Top-left corner
+        const topRightAngle = getAngle(window.innerWidth, 0); // Top-right corner
+        const bottomLeftAngle = getAngle(0, window.innerHeight); // Bottom-left corner
+        const bottomRightAngle = getAngle(
+          window.innerWidth,
+          window.innerHeight
+        ); // Bottom-right corner
+
+        function launchConfetti() {
+          // Confetti from all 4 sides
+          let defaults = {
+            particleCount: 25,
+            gravity: 0.3,
+            spread: 30,
+
+            startvelocity: 50,
+            colors: ["#ff0000", "#00ff00", "#0000ff", "#ffcc00", "#ff00ff"],
+            zIndex: 99999,
+          };
+          let confettiInterval = setInterval(() => {
+            // Top-left
+            confetti({
+              ...defaults,
+              origin: { x: 0, y: 0 },
+              angle: -topLeftAngle,
+            });
+            // Top-right
+            confetti({
+              ...defaults,
+              origin: { x: 1, y: 0 },
+              angle: -topRightAngle,
+            });
+            // Bottom-left
+            confetti({
+              ...defaults,
+              origin: { x: 0, y: 1 },
+              angle: -bottomLeftAngle,
+            });
+            // Bottom-right
+            confetti({
+              ...defaults,
+              origin: { x: 1, y: 1 },
+              angle: -bottomRightAngle,
+            });
+          }, 100);
+
+          setTimeout(() => {
+            clearInterval(confettiInterval);
+          }, 1000);
+        }
+
+        updateClock();
+        const timeinterval = setInterval(updateClock, 1000);
+      }
+
+      const addFlip = (card, time) => {
+        // ** confirm time has changed
+        const currTime = card.querySelector(".top-half").innerText;
+        if (time == currTime) return;
+
+        let t = time <= 9 ? `0${time}` : time;
+        const topHalf = card.querySelector(".top-half");
+        const bottomHalf = card.querySelector(".bottom-half");
+        const topFlip = document.createElement("div");
+        const bottomFlip = document.createElement("div");
+
+        // ** add animation, populate with current time
+        topFlip.classList.add("top-flip");
+        topFlip.innerText = currTime;
+
+        bottomFlip.classList.add("bottom-flip");
+
+        // ** animation begins, update top-half to new time
+        topFlip.addEventListener("animationstart", () => {
+          topHalf.innerText = t;
+        });
+
+        // ** animation ends, remove animated div, update bottom animation to new time
+        topFlip.addEventListener("animationend", () => {
+          topFlip.remove();
+          bottomFlip.innerText = t;
+        });
+
+        // ** animation ends, update bottom-half to new time, remove animated div
+        bottomFlip.addEventListener("animationend", () => {
+          bottomHalf.innerText = t;
+          bottomFlip.remove();
+        });
+
+        card.appendChild(topFlip);
+        card.appendChild(bottomFlip);
+      };
+
+      initializeClock(countdown);
+      document.querySelector("video").addEventListener("ended", function () {
+        document.querySelector("video").pause();
+      });
+    </script>
+  </body>
+</html>
