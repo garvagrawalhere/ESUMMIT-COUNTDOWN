@@ -263,13 +263,16 @@
       <video id="myVideo">
         <source src="./Final_design.mp4" type="video/mp4" />
       </video>
+      <audio id="tickSound">
+        <source src="sound.mp3" type="audio/mpeg" />
+      </audio>
     </div>
     <main>
       <div class="logo">
         <!-- <img src="./Gg2hQOYbAAA6p4z.jpg" alt="" /> -->
         <img src="sorrymarki.png" alt="image" />
       </div>
-      <h1>The Pursuit begins in</h1>
+      <h1>The Pursuit in</h1>
       <div class="cards">
         <!-- <div class='card days'>
 				<div class='flip-card'>
@@ -327,12 +330,14 @@
       const hours = document
         .querySelector(".hours")
         .querySelector(".flip-card");
+      const tickSound = document.getElementById("tickSound");
       const minutes = document
         .querySelector(".minutes")
         .querySelector(".flip-card");
       const seconds = document
         .querySelector(".seconds")
         .querySelector(".flip-card");
+      const tickSound2 = new Audio("sound.mp3");
 
       // ** get the time totals, return them
       function getTimeRemaining(countdown) {
@@ -361,6 +366,16 @@
           addFlip(minutes, t.minutes);
           addFlip(seconds, t.seconds);
 
+          // if (t.diff <= 10 && t.diff > 0) {
+          //   tickSound2.play();
+          // }
+
+          if (t.diff <= 36000000 && t.diff > 0) {
+            tickSound.currentTime = 0;
+            tickSound.play();
+            setTimeout(() => tickSound.pause(), 900); // Pause after 900ms to prevent overlap
+          }
+
           if (t.diff <= 0) {
             clearInterval(timeinterval);
             launchConfetti(); // Trigger confetti
@@ -382,6 +397,9 @@
           window.innerWidth,
           window.innerHeight
         ); // Bottom-right corner
+        document.addEventListener("click", () => {
+          tickSound.play();
+        });
 
         function launchConfetti() {
           // Confetti from all 4 sides
